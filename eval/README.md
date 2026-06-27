@@ -51,7 +51,7 @@ from eval.runner import save_baseline
 save_baseline({"faithfulness": 0.82, "answer_relevancy": 0.88, "conciseness": 0.79})
 ```
 
-## Principles (see `ON_TAP/_CHUNG/Career_AI/PATTERN_REGISTRY.md` "Harness Engineering")
+## Principles
 
 1. **Golden from real traces** — start synthetic, grow from production failures
 2. **Binary pass/fail via threshold** — no vague Likert scales
