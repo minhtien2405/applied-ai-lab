@@ -216,3 +216,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# DeepEval cache + eval results
+.deepeval/
+.deepeval-*
+eval/results/
+eval/.results/
+
+# Local golden scratch (don't commit ad-hoc samples)
+golden-local-*.jsonl

@@ -1,0 +1,44 @@
+# docker-compose.yml — AI Systems Lab
+#
+# Minimal stack for L6 Eval Harness + future modules.
+# L6 eval/ itself does NOT require these services (DeepEval runs in-process).
+# These are stubs for future modules (L4 Memory Redis, L8 Deployment Postgres, L3 Knowledge Qdrant).
+# Uncomment when the corresponding module lands.
+
+services:
+  # L4 Memory — Redis for conversation + long-term memory (future)
+  # redis:
+  #   image: redis:7-alpine
+  #   ports: ["6379:6379"]
+  #   volumes: ["redis-data:/data"]
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 5
+
+  # L8 Deployment — Postgres for state + registry (future)
+  # postgres:
+  #   image: postgres:16-alpine
+  #   environment:
+  #     POSTGRES_USER: lab
+  #     POSTGRES_PASSWORD: lab
+  #     POSTGRES_DB: lab
+  #   ports: ["5432:5432"]
+  #   volumes: ["pg-data:/var/lib/postgresql/data"]
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U lab"]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 5
+
+  # L3 Knowledge — Qdrant for vector search (future)
+  # qdrant:
+  #   image: qdrant/qdrant:latest
+  #   ports: ["6333:6333", "6334:6334"]
+  #   volumes: ["qdrant-data:/qdrant/storage"]
+
+# volumes:
+#   redis-data:
+#   pg-data:
+#   qdrant-data:

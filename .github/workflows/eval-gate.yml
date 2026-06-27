@@ -1,0 +1,67 @@
+name: eval-gate
+
+on:
+  pull_request:
+    paths:
+      - "eval/**"
+      - "tests/**"
+      - "prompts/**"
+      - "pyproject.toml"
+      - "Makefile"
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Smoke tests (no LLM call)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Run smoke tests
+        run: make test-smoke
+
+      - name: Lint
+        run: ruff check .
+
+  eval:
+    name: Eval regression gate (DeepEval)
+    runs-on: ubuntu-latest
+    # Skip on PRs from forks (no API key) — smoke still runs
+    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Run eval regression suite
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # Use cheaper model for judge in CI (default gpt-4o-mini)
+          DEEPEVAL_MODEL: "openai:gpt-4o-mini"
+        run: make eval
+
+      - name: Upload eval results artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: |
+            .deepeval/
+            eval/results/
+          retention-days: 30
