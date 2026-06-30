@@ -46,6 +46,7 @@ Primary day job is Fraud/Risk ML at scale. This lab keeps the LLM/Agentic/AI-Sys
 | Module | Layer | Tier | Status |
 |---|---|---|---|
 | `eval/` | L6 | 1 | 🟢 Q3 2026 — skeleton landed (DeepEval + 10 golden + smoke tests + CI gate) |
+| `modules/streaming-fraud-mini/` | L4 + L6 + L7 + L8 | 0 | ⚪ scaffolded — spec + folder structure only; 8-week implement plan in module README |
 | `gateway/` | L1 | 0 | planned Q2 2027 |
 | `runtime/` | L2 | 0 | planned Q4 2026 |
 | `knowledge/` | L3 | 0 | planned Q1 2027 |
@@ -53,6 +54,10 @@ Primary day job is Fraud/Risk ML at scale. This lab keeps the LLM/Agentic/AI-Sys
 | `tools/` | L5 | 0 | planned Q4 2026 |
 | `obs/` | L7 | 0 | planned 2028 |
 | `deploy/` | L8 | 0 | planned Q3 2027 |
+
+### `modules/streaming-fraud-mini/` — streaming fraud detection (mini-scale)
+
+A greenfield, mini-scale, end-to-end streaming fraud-detection pipeline — synthetic tx event → Kafka → streaming aggregation → Redis features → GBDT @ Triton → decision engine → drift + sliced eval → CI eval gate. Builds intuition for *"large fraud system"* patterns in a public, reproducible way; serves as interview evidence. **Cross-layer:** anchors L4 (Redis feature memory) + L6 (reuses root `eval/`) + L7 (drift/sliced eval) + L8 (docker-compose). Stack: open-source only (Kafka, Flink/Spark, Redis, Triton, FastAPI, OpenTelemetry, pytest). See [`modules/streaming-fraud-mini/README.md`](modules/streaming-fraud-mini/README.md) for architecture + 8-week roadmap. Status: `NOT_STARTED` — scaffold + spec only.
 
 **Tier definitions:**
 

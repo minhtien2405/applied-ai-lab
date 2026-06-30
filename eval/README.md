@@ -64,6 +64,17 @@ save_baseline({"faithfulness": 0.82, "answer_relevancy": 0.88, "conciseness": 0.
 
 This module is fresh code using only the open-source DeepEval framework. No code reused from any employer or freelance project. Design patterns (golden + judge + regression) are not copyrightable.
 
+## Planned: fraud golden suite (NOT_STARTED)
+
+The `modules/streaming-fraud-mini/` module (scaffolded, not yet implemented) will extend this harness — **not fork it** — with a fraud-specific golden set and metrics:
+
+- `eval/golden/fraud_golden.jsonl` — 30+ synthetic samples across 3 archetypes: **scam**, **ATO**, **payment fraud** (positives + negatives balanced).
+- `eval/metrics.py` — fraud metrics: precision/recall/F1 per slice (channel, amount bucket, country), PSI drift, alert latency.
+- `eval/runner.py` — `--suite fraud` mode + recall-drop regression block.
+- `eval/baseline.json` — adds `fraud` block (per-slice recall, AUC, alert latency).
+
+See [`modules/streaming-fraud-mini/eval/README.md`](../modules/streaming-fraud-mini/eval/README.md) for the fraud golden taxonomy and CI gate plan. All fraud samples are synthetic — no employer data.
+
 ## Next steps (Tier 2)
 
 - [ ] Wire `actual_output` to L2 Agent Runtime (currently set to `expected_output` placeholder)
@@ -71,3 +82,4 @@ This module is fresh code using only the open-source DeepEval framework. No code
 - [ ] Grow golden to 50+ samples from real Lab usage
 - [ ] Add per-line system-prompt ablation script (Anthropic April 23 lesson)
 - [ ] Add DeepEval MCP Task Completion metric (for Q4 2026 L5 MCP module)
+- [ ] Wire `--suite fraud` mode when `streaming-fraud-mini` lands W7 (NOT_STARTED)
