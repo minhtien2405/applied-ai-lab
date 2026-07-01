@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "command": "bash \".claude/hooks/spec-before-code.sh\"",
+        "matcher": "UserPrompt",
+        "timeout": 10
+      },
+      {
+        "command": "bash \".claude/hooks/pre-commit-eval-reminder.sh\"",
+        "matcher": "UserPrompt",
+        "timeout": 10
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "bash \".claude/hooks/baseline-guard.sh\"",
+        "matcher": "Write|Edit|MultiEdit",
+        "timeout": 10
+      }
+    ]
+  }
+}

@@ -1,0 +1,62 @@
+---
+description: 4 Karpathy principles adapted for AI/ML Applied Systems Engineers — Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution
+alwaysApply: true
+---
+
+# Karpathy 4 principles — ML-adapted
+
+Borrowed from `forrestchang/andrej-karpathy-skills` (MIT). Adapted for ML/LLM/agentic systems work.
+
+## 1. Think Before Coding
+
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
+
+- **State the eval hypothesis before code**: "metric X is at W, target is T, expected reason Y". If you cannot name the metric the change should move, ask for clarification — don't code.
+- **Surface tradeoffs**: latency vs cost vs quality, offline vs online, precision vs recall, simplicity vs flexibility. Don't pick silently.
+- **Push back when warranted**: if a simpler approach exists, say so before implementing the complex one.
+- **Stop when confused**: name what's unclear and ask. Don't paper over ambiguity.
+
+## 2. Simplicity First
+
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No model/config/abstraction beyond what the current use-case needs.
+- No "framework" for a single use-case. No speculative pluggability.
+- No error handling for impossible scenarios.
+- If 200 lines could be 50, rewrite. **The test**: would a staff ML engineer call this overcomplicated? If yes, simplify.
+
+## 3. Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+- Don't refactor `eval/runner.py` when fixing `metrics.py`.
+- Don't tune `baseline.json`, thresholds, or golden set without an explicit request (and an ADR for the change).
+- Don't "improve" adjacent code, comments, or formatting.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, **mention it — don't delete it**.
+- Every changed line should trace directly to the user's request.
+
+## 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform imperative tasks into verifiable goals:
+
+| Instead of... | Transform to... |
+|---|---|
+| "Improve the model" | "Run eval, get delta vs baseline, no slice regresses beyond tolerance" |
+| "Fix the hallucination" | "Write a failing eval case that reproduces it, then make it pass" |
+| "Refactor the gateway" | "Eval passes before and after; latency p95 doesn't regress" |
+| "Add fallback" | "Inject failure in primary; fallback serves; eval still passes" |
+
+For multi-step tasks, state a brief plan:
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+```
+
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+## Tradeoff note
+
+These guidelines bias toward **caution over speed**. For trivial tasks (typo fixes, obvious one-liners), use judgment — not every change needs the full rigor. The goal is reducing costly mistakes on non-trivial ML work, not slowing down simple tasks.

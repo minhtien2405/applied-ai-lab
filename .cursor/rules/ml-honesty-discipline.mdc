@@ -1,0 +1,47 @@
+---
+description: ML honesty discipline — no inflated benchmarks, no data leakage, honest offline-vs-online gap, ownership boundary
+alwaysApply: true
+---
+
+# ML honesty discipline
+
+Non-negotiable honesty rules for AI/ML Applied Systems Engineers. Violating these is worse than shipping late — a dishonest ML claim poisons every future claim.
+
+## 1. No inflated benchmark
+
+- Every metric you state must come from an actual eval run or benchmark script.
+- Chưa chạy → `⟨…⟩` or `⚠️ VERIFY`. Don't fill in plausible-looking numbers.
+- When citing a delta, include the comparison baseline: "83% → 94% (XGBoost vs image-only baseline, golden set N=300)".
+- Never claim a metric without naming the population it was measured on.
+
+## 2. No data leakage
+
+- Train/eval split must be defensible. Time-based split for temporal data. Group split when subjects repeat.
+- Point-in-time features only — no feature that wouldn't have been knowable at inference time.
+- Golden set must be **frozen before** optimization starts. Optimizing against an unfrozen golden set is leakage.
+- If you suspect leakage, stop and verify — not "I'll check later".
+
+## 3. Offline-vs-online gap honest
+
+- Offline metric improvement ≠ production improvement. Always say "offline delta is X, online validation pending" until A/B or shadow test confirms.
+- Don't claim production win from offline alone. State the validation gap explicitly.
+- Slice performance can diverge offline vs online — call this out.
+
+## 4. Sliced eval, not aggregate
+
+- Aggregate metrics can hide slice regressions. Always report sliced breakdown for important segments.
+- "Recall went up 11 points" is incomplete. "Recall +11 aggregate, but −4 on slice Y" is the honest version.
+- Sliced regression beyond tolerance blocks the merge even if aggregate improves.
+
+## 5. Ownership boundary
+
+- Distinguish **what you did** vs **what a teammate did** vs **what open-source code did**.
+- "I trained from scratch" vs "I fine-tuned a teammate's checkpoint" vs "I deployed an open-source model" — these are different claims. Make the right one.
+- Peer reviewers (and interviewers) catch over-claiming fast. One inflated claim casts doubt on all your claims.
+- When in doubt, under-claim. "I improved it" beats "I built it" if the truth is improvement, not creation.
+
+## 6. Don't tune the baseline to pass
+
+- Editing `baseline.json` to make a regression "go away" is dishonest.
+- Baseline updates require: a documented reason (model upgrade, golden set expansion, metric definition change) + an ADR + a fresh eval run proving the new baseline is real.
+- The hook `baseline-guard.sh` flags unsanctioned baseline edits.

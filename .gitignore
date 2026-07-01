@@ -225,3 +225,6 @@ eval/.results/
 
 # Local golden scratch (don't commit ad-hoc samples)
 golden-local-*.jsonl
+
+# Agentic workflow pack — hook sync log (advisory only, not for commit)
+.claude/.sync-log

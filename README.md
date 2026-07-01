@@ -95,6 +95,12 @@ A greenfield, mini-scale, end-to-end streaming fraud-detection pipeline — synt
 - ❌ Jupyter-only demos
 - ❌ Unmeasured "I read the paper" claims — every integration has a number
 
+## Agentic workflow pack
+
+This repo ships a portable **AI/ML Applied Systems Engineer** workflow pack under [`.claude/`](.claude/) + [`.cursor/`](.cursor/): 12 skills, 10 slash commands, 4 sub-agent personas, 3 always-on rules, 3 hooks. The pack is project-agnostic — copy it to any other repo and use it as-is. See [`.claude/skills/README.md`](.claude/skills/README.md) for the full pack overview, [`docs/install-to-other-repo.md`](docs/install-to-other-repo.md) for installation elsewhere, and [`docs/adrs/0001-*.md`](docs/adrs/0001-adopt-karpathy-and-agent-skills-anatomy.md) for attribution.
+
+Commands available in Claude Code (and mirrored to Cursor): `/spec` · `/plan` · `/build` · `/eval` · `/review` · `/ship` · `/incident` · `/adr` · `/design` · `/skills-help`.
+
 ## Quick start
 
 ```bash

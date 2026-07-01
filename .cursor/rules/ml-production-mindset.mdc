@@ -1,0 +1,60 @@
+---
+description: ML production mindset — eval-gate before merge, fallback-first, observability-as-you-build, ADR for irreversible decisions, cost-aware
+alwaysApply: true
+---
+
+# ML production mindset
+
+Always-on discipline for shipping ML/LLM/agentic systems to production. These are the habits that separate production-grade work from prototype-grade work.
+
+## 1. Eval-gate before merge
+
+- Every PR that touches model, prompt, retrieval, threshold, or data → must include an eval delta vs baseline.
+- "I'll add eval later" = eval never. Add the eval harness first; it shapes the implementation.
+- Sliced regressions beyond tolerance block the merge even if aggregate improves.
+- CI gate is the safety net, not the first line of defense — run eval locally before pushing.
+
+## 2. Fallback-first
+
+- Every external dependency (LLM API, vector DB, model endpoint, embedding service) → must have a fallback path.
+- **Never-500 is the target**: a downstream failure should degrade gracefully (cached answer, simpler model, honest "try again later"), not surface as a 5xx.
+- Fallback ladder order: primary → cache → cheaper model → static answer → honest error. Pick the level that fits the request's latency budget.
+- Test fallback by injecting primary failure in eval — don't wait for production to find it.
+
+## 3. Observability-as-you-build
+
+- Trace, metrics, logs land **with the code**, not after.
+- For every ML serving change, minimum telemetry: latency (p50/p95/p99), cost per request, success/fallback/error counts, input/output length, model variant used.
+- Symptom-based alerting: alert on user-visible symptoms (error rate, latency, fallback rate), not on internal causes (CPU, disk) alone.
+- Tracing must include: request ID, model variant, prompt template version, retrieval sources, fallback path taken. Without these, post-mortems are guesswork.
+
+## 4. ADR for irreversible decisions
+
+Write an ADR **before** merging decisions that are expensive to reverse:
+
+- Model choice (which foundation model, which embedding)
+- Threshold / cutoff values that affect user experience
+- Data source switch
+- Schema changes (feature, payload, API)
+- Eval framework or golden set definition change
+
+ADR includes: context, decision, alternatives considered, consequences, rollback plan. See `/adr` command and `documentation-and-adrs-ml` skill.
+
+## 5. Cost-aware
+
+- Every serving change → estimate cost delta (per-1K-requests, per-day, per-month).
+- Don't silently 10× the cost. If a quality improvement doubles cost, state it explicitly and get approval.
+- Track: tokens in/out, embedding calls, retrieval calls, reranker calls, GPU time. Aggregate per request and per user.
+- Cost regression is a regression — eval gate should catch it alongside quality metrics.
+
+## 6. Pluggable, not rewritten
+
+- New framework/model/approach lands in a branch, gets benchmarked against current, then merges if it wins.
+- Don't rip out the old system to make room for the new — run them side-by-side until the new one proves out.
+- Design seams (interfaces, config) so swapping is a branch, not a rewrite.
+
+## 7. Public trace
+
+- Commits, eval runs, benchmark reports, ADRs, write-ups — these are the evidence trail.
+- "I read the paper and understood it" is not evidence. A benchmark number is.
+- Future-you (and interviewers) will judge by the trace, not by memory.
